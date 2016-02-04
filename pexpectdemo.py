@@ -2,13 +2,11 @@
 # filename: pexpect_test.py
 
 import pexpect
-import time
 
 if __name__ == '__main__':
     user = 'natsu'
     ip = '192.168.9.208'
     mypassword = '1'
-    cmds=['ls','pwd','ifconfig','date','ps']
     
     print user
     child = pexpect.spawn('ssh %s@%s' % (user,ip))
@@ -24,7 +22,7 @@ if __name__ == '__main__':
     child.expect('Select account:')
     child.sendline('9')
     child.expect('Input session comment:')
-    child.sendline('natsu')
-    for cmd in cmds:
-        time.sleep(5)
-        child.sendline(cmd)
+    child.sendline('ls')
+    print child.before   # Print the result of the ls command.
+    child.sendline("echo '112' >> /home/forever/1.txt ")
+    child.interact()     # Give control of the child to the user.
