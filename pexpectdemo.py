@@ -1,28 +1,41 @@
+#!/usr/bin/python2.6 
 # -*- coding: utf-8 -*-
 # filename: pexpect_test.py
 
-import pexpect
+import pexpect,time,sys
 
 if __name__ == '__main__':
     user = 'natsu'
     ip = '192.168.9.208'
-    mypassword = '1'
-    
+    passwd = '1'
+    cmds = ['ps','ls','pwd','ifconfig','date']
+    demo = open("demo.txt", "ab")
+    demo.write ('==========Log Tile: demo==========\n')
     print user
     child = pexpect.spawn('ssh %s@%s' % (user,ip))
-#    if child.expect('Are you sure you want to continue connecting (yes/no)?'):
-#        child.sendline('yes')    
-    child.expect ('Password:')
-    child.sendline (mypassword)
-    
-    child.expect('Select group:')
-    child.sendline('1')
-    child.expect ('Select page:')
-    child.sendline ('1')
-    child.expect('Select account:')
-    child.sendline('9')
-    child.expect('Input session comment:')
-    child.sendline('ls')
-    print child.before   # Print the result of the ls command.
-    child.sendline("echo '112' >> /home/forever/1.txt ")
-    child.interact()     # Give control of the child to the user.
+    try:
+        firstTime = child.expect(['password: ', 'continue connecting (yes/no)?'])
+        if firstTime == 1 :
+            child.sendline('yes')
+        child.expect('Password:')
+        child.sendline(passwd)
+        child.expect('Select group:')
+        child.sendline('1')
+        child.expect('Select page:')
+        child.sendline('16.24')
+        child.expect('Select account:')
+        child.sendline('\root')
+        child.expect('Input session comment:')
+        child.sendline('natsu')
+        for cmd in cmds:
+            child.sendline(cmd)
+            print child.before   # Print the result of the ls command.
+            child.logfile = demo
+            child.expect(pexpect.EOF)
+        demo.close()
+    except pexpect.EOF:
+        print "EOF"
+    except pexpect.TIMEOUT:  
+        print "TIMEOUT" 
+    finally:
+        child.close()
