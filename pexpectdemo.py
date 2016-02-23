@@ -9,8 +9,10 @@ if __name__ == '__main__':
     ip = '192.168.9.208'
     passwd = '1'
     cmds = ['ps','ls','pwd','ifconfig','date']
-    patterns = ['1','[Pp]assword:','Select group:','Select page:','Select server:','Select account:','Input session comment:','#','Select service:']
+    patterns = ['Are you sure you want to continue connecting (yes/no)?','[Pp]assword:','Select group:','Select page:','Select server:','Select account:','Input session comment:','#','Select service:']
     CONTINUES,PASSWD,GROUP,PAGE,SERVER,ACCOUNT,ISCOMMT,OPFLAG,SERVICE = range(len(patterns))
+    flag = 'yes'
+    group = '1'
     # CONTINUES = '1' #Are you sure you want to continue connecting (yes/no)?
     # PASSWD = '[Pp]assword:'
     # GROUP = 'Select group:'
@@ -30,24 +32,24 @@ if __name__ == '__main__':
         # if firstTime == 1 :
         #     child.sendline('yes')
         while True:
-            flag=child.expect(patterns)
-            if flag == CONTINUES:#0:
-                child.sendline('yes')
-            elif flag == PASSWD:
-                child.sendline('1')
-            elif flag == GROUP:
-                child.sendline('1')
-            elif flag == PAGE:
+            i = child.expect(patterns)
+            if i == CONTINUES:#0:
+                child.sendline(flag)
+            elif i == PASSWD:
+                child.sendline(passwd)
+            elif i == GROUP:
+                child.sendline(group)
+            elif i == PAGE:
                 child.sendline('0')
-            elif flag == SERVER:
+            elif i == SERVER:
                 child.sendline('16.24')
-            elif flag == ACCOUNT:
+            elif i == ACCOUNT:
                 child.sendline('root')
-            elif flag == ISCOMMT:
+            elif i == ISCOMMT:
                 child.sendline('natsu')
-            elif flag == SERVICE:
+            elif i == SERVICE:
                 child.sendline('ssh')
-            elif flag == OPFLAG:
+            elif i == OPFLAG:
                 break
         # child.sendline(cmds)
         # p = pexpect.spawn(cmds)
@@ -63,7 +65,7 @@ if __name__ == '__main__':
         demo.close()
     except pexpect.TIMEOUT:  
         print "TIMEOUT" 
-    except pexpect.EOF:
-        print "EOF"
+    # except pexpect.EOF:
+    #     print "EOF"
     finally:
         child.close()
