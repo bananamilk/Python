@@ -6,15 +6,15 @@ import pexpect,time,sys
 def sendCommt():
     demo = open("result.txt", "ab")
     demo.write('==========Log Tile: demo==========\n')
-    print user
+    print "start link"
     child = pexpect.spawn('ssh %s@%s' % (user,ip))
-        
+    print "link to 192.168.9.208"
     # firstTime = child.expect(['password: ', 'continue connecting (yes/no)?'])
     # if firstTime == 1 :
     #     child.sendline('yes')
     while True:
         i = child.expect(patterns)
-        if i == CONTINUES:#0:
+        if i == CONTINUES:
             child.sendline(flag)
         elif i == PASSWD:
             child.sendline(passwd)
@@ -39,19 +39,23 @@ def sendCommt():
     for cmd in cmds:
         # child.sendline(cmd)
         time.sleep(2)
-        p = pexpect.spawn(cmd)
-        p.logfile = demo
-        p.write('=====================\n')
-        p.expect(pexpect.EOF)
-        print cmd
+        # p = pexpect.spawn(cmd)
+        # p.logfile = demo
+        # p.expect(pexpect.EOF)
+        child.sendline(cmd)
+        child.logfile = demo
+        child.expect('#')
+        child.before
+    time.sleep(2)
     demo.close()
     child.close()
+    print "done"
 
 if __name__ == '__main__':
     user = 'natsu'
     ip = '192.168.9.208'
     passwd = '1'
-    cmds = ['ps','ls','pwd','ifconfig','date']
+    cmds = ['ps','ls','ls -l','ifconfig','date']
     patterns = ['Are you sure you want to continue connecting (yes/no)?','[Pp]assword:','Select group:','Select page:','Select server:','Select account:','Input session comment:','#','Select service:']
     CONTINUES,PASSWD,GROUP,PAGE,SERVER,ACCOUNT,ISCOMMT,OPFLAG,SERVICE = range(len(patterns))
     flag = 'yes'
