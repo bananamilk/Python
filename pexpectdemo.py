@@ -1,4 +1,4 @@
-#!/usr/bin/python2.6 
+#!/usr/bin/python2.6 #
 # -*- coding: utf-8 -*-
 # filename: pexpect_test.py
 
@@ -14,7 +14,7 @@ def sendCommt():
     #     child.sendline('yes')
     while True:
         i = child.expect(patterns)
-        if i == CONTINUES:#0:
+        if i == CONTINUES:
             child.sendline(flag)
         elif i == PASSWD:
             child.sendline(passwd)
