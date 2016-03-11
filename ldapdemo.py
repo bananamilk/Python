@@ -37,6 +37,7 @@ def getLdapUserDN(user):
 	else:
 		return 0, ''
 
+
 		
 
 if __name__ == '__main__':
@@ -46,7 +47,11 @@ if __name__ == '__main__':
 	# ldapUser = "root"
 	ldapUser = "CN=admin,DC=test,DC=com"
 	ldapPasswd = "demo"
-	getLdapUserDN("test1")
+	passwd = "0"
+	dn = getLdapUserDN("test1")[1]
+	print dn
+	my_ldap = ldap.initialize(ldapPath)
+	print my_ldap.simple_bind_s(dn,passwd)
 	# demo = "test6"
 	# dn = "uid=root,ou=People,dc=shterm,dc=com"
 	# logonAnnymous()
